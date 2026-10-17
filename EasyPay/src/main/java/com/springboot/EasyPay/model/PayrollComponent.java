@@ -6,6 +6,8 @@ import com.springboot.EasyPay.enums.ComponentType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -27,7 +29,7 @@ public class PayrollComponents {
     private ComponentType componentType;
 
     @Column(nullable = false)
-    private double amount;
+    private BigDecimal amount;
 
     @Column(nullable = false)
     private String description;
