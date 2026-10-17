@@ -58,6 +58,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         // Admin onboard API (permitAll to add) (After addition - denyAll)
                         .requestMatchers(HttpMethod.POST,"/api/admin/add").permitAll()
+
+                        // login API
+                        .requestMatchers(HttpMethod.GET,"/api/auth/login").authenticated()
+
                         //Admin onboard manager
                         .requestMatchers(HttpMethod.POST,"/api/manager/add").hasAuthority("ADMIN")
                         //Admin onboard HR
@@ -81,17 +85,49 @@ public class SecurityConfig {
                         //HR details
                         .requestMatchers(HttpMethod.GET,"/api/hr/{id}").hasAnyAuthority("HR")
 
-                        // login API
-                        .requestMatchers(HttpMethod.GET,"/api/auth/login").authenticated()
-
                         //Update manager details
-                        .requestMatchers(HttpMethod.PUT,"api/manager").hasAuthority("manager")
+                        .requestMatchers(HttpMethod.PUT,"/api/manager").hasAuthority("MANAGER")
 
                         //Update hr details
-                        .requestMatchers(HttpMethod.PUT,"api/hr").hasAuthority("HR")
+                        .requestMatchers(HttpMethod.PUT,"/api/hr").hasAuthority("HR")
 
                         // HR assigning the manager to employee
-                        .requestMatchers(HttpMethod.PUT,"api/employee/assign/{managerId}/{employeeId}").hasAuthority("HR")
+                        .requestMatchers(HttpMethod.PUT,"/api/employee/assign/{managerId}/{employeeId}").hasAuthority("HR")
+
+                        //Create payroll by HR
+                        .requestMatchers(HttpMethod.POST,"/api/payroll/{employeeId}").hasAuthority("HR")
+
+                        //Process payroll by HR
+                        .requestMatchers(HttpMethod.POST,"/api/payroll/process/{payrollId}").hasAuthority("HR")
+
+                        //Markas paid  by HR
+                        .requestMatchers(HttpMethod.PUT,"/api/payroll/pay/{payrollId}").hasAuthority("HR")
+
+                        //Getting  Payslip by HR
+                        .requestMatchers(HttpMethod.GET,"/api/payroll/payslip/{payrollId}").hasAuthority("HR")
+
+//                        //Getting  Payslip by Employee
+//                        .requestMatchers(HttpMethod.GET,"/api/payroll/payslip/{payrollId}").hasAuthority("EMPLOYEE")
+
+                        //Getting  Payslip with empId by employee
+                        .requestMatchers(HttpMethod.GET,"/api/payroll/employee/{employeeId}").hasAuthority("EMPLOYEE")
+
+                        //Getting  payslip with emplId by HR
+                        .requestMatchers(HttpMethod.GET,"/api/payroll/employee/{employeeId}").hasAuthority("HR")
+
+                        //Adding PayrollComponents
+                        .requestMatchers(HttpMethod.POST,"/api/payroll-components/{payrollId}").hasAuthority("HR")
+
+                        //Getting  components by payroll_id by hr
+                        .requestMatchers(HttpMethod.GET,"/api/payroll-components/payroll/{payrollId}").hasAuthority("HR")
+
+                        //Getting  components by payroll_id by emp
+                        .requestMatchers(HttpMethod.GET,"/api/payroll-components/payroll/{payrollId}").hasAuthority("EMPLOYEE")
+
+                        //Getting  payslip with emplId by HR
+                        .requestMatchers(HttpMethod.DELETE,"/api/payroll-components/{componentId}").hasAuthority("HR")
+
+
                         .anyRequest().permitAll()
                 );
         // Add jwt filter before Spring's Auth Filter

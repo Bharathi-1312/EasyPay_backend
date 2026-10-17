@@ -5,28 +5,14 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public record PayrollDto(
-        @NotNull(message = "Pay period start date is required")
+        Long employeeId,
         LocalDate payPeriodStart,
-
-        @NotNull(message = "Pay period end date is required")
         LocalDate payPeriodEnd,
-
-        @Positive(message = "Basic salary must be greater than zero")
-        double basicSalary,
-
-        @PositiveOrZero(message = "Total earnings cannot be negative")
-        double totalEarnings,
-
-        @PositiveOrZero(message = "Total deductions cannot be negative")
-        double totalDeductions,
-
-        @PositiveOrZero(message = "Net salary cannot be negative")
-        double netSalary,
-
-        @NotNull(message="Status should be filled")
-        Status status
+        BigDecimal basicSalary,
+        Long processedByHrId
 ) {
 }

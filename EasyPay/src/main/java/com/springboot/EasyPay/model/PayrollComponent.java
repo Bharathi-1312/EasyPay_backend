@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @Table
 @Getter
 @Setter
-public class PayrollComponents {
+public class PayrollComponent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

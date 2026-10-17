@@ -1,4 +1,17 @@
 package com.springboot.EasyPay.Dto.response;
 
-public class PayrollComponentRespDto {
-}
+import com.springboot.EasyPay.enums.ComponentName;
+import com.springboot.EasyPay.enums.ComponentType;
+import lombok.AllArgsConstructor;
+
+import java.math.BigDecimal;
+
+
+public record PayrollComponentRespDto(
+        Long id,
+        Long payrollId,
+        ComponentName componentName,
+        ComponentType componentType,
+        BigDecimal amount,
+        String description
+) {}

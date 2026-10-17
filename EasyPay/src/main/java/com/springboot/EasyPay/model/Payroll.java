@@ -1,6 +1,6 @@
 package com.springboot.EasyPay.model;
 
-import com.springboot.EasyPay.enums.Status;
+import com.springboot.EasyPay.enums.PayrollStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,19 +28,19 @@ public class Payroll {
     private LocalDate payPeriodEnd;
 
 
-    private double basicSalary;
+    private BigDecimal basicSalary;
 
 
-    private double totalEarnings;
+    private BigDecimal totalEarnings;
 
 
-    private double totalDeductions;
+    private BigDecimal totalDeductions;
 
 
-    private double netSalary;
+    private BigDecimal netSalary;
 
     @Enumerated(EnumType.STRING)
-    private Status status; // DRAFT, PROCESSED, PAID
+    private PayrollStatus status; // DRAFT, PROCESSED, PAID
 
     private LocalDateTime processedAt;
 
@@ -54,9 +54,9 @@ public class Payroll {
 
     @OneToMany(mappedBy = "payroll", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("id ASC")
-    private List<PayrollComponents> components = new ArrayList<>();
+    private List<PayrollComponent> components = new ArrayList<>();
 
-    public void addComponent(PayrollComponents component) {
+    public void addComponent(PayrollComponent component) {
         component.setPayroll(this);
         components.add(component);
     }
