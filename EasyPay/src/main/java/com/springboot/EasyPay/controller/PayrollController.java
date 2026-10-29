@@ -1,17 +1,19 @@
 package com.springboot.EasyPay.controller;
 
-import com.springboot.EasyPay.Dto.request.EmployeeDto;
 import com.springboot.EasyPay.Dto.request.PayrollDto;
-import com.springboot.EasyPay.Dto.response.PayrollRespDto;
+import com.springboot.EasyPay.Dto.response.*;
+import com.springboot.EasyPay.enums.PayrollStatus;
 import com.springboot.EasyPay.service.PayrollService;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -66,4 +68,80 @@ public class PayrollController {
         return payrollService.getEmployeePayslips(
                 employeeId, pageable);
     }
+
+
+
+
+    @GetMapping("/api/payroll/status/{status}")
+    //@PreAuthorize("hasRole('HR')")
+    public List<PayrollRespDto> byStatus(@PathVariable PayrollStatus status) {
+        return payrollService.getByStatus(status);
+    }
+
+    // 3. Payroll by date range
+    @GetMapping("/api/payroll/period")
+    //@PreAuthorize("hasRole('HR')")
+    public List<PayrollRespDto> byPeriod(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate start,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate end) {
+        return payrollService.getByPeriod(start, end);
+    }
+
+    // 4. Search by employee and date range
+    @GetMapping("api/payroll/search")
+    //@PreAuthorize("hasRole('HR')")
+    public List<PayrollRespDto> search(
+            @RequestParam Long employeeId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate start,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate end) {
+        return payrollService.searchPayroll(employeeId, start, end);
+    }
+
+    // 7. Earnings history
+    @GetMapping("/api/employee/earnings/{id}")
+    public List<PayrollEarningsDto> earnings(@PathVariable Long id) {
+        return payrollService.getEarnings(id);
+    }
+
+    // 8. Deductions history
+    @GetMapping("/api/employee/deductions/{id}")
+    public List<PayrollDeductionDto> deductions(@PathVariable Long id) {
+        return payrollService.getDeductions(id);
+    }
+
+    // 12. Monthly report
+    @GetMapping("/api/payroll/reports/monthly")
+    public MonthlyPaymentDto monthly(
+            @RequestParam int year,
+            @RequestParam int month) {
+        return payrollService.monthlyReport(year, month);
+    }
+
+    // 18. Printable payslip text
+    @GetMapping("/api/payroll/payslip-text/{payrollId}")
+    public String payslipText(@PathVariable Long payrollId) {
+        return payrollService.getPayslipText(payrollId);
+    }
+
+    // 20. Payment status
+    @GetMapping("/api/payroll/payment-status/{payrollId}")
+    //@PreAuthorize("hasRole('HR')")
+    public PaymentStatusDto paymentStatus(@PathVariable Long payrollId) {
+        return payrollService.getPaymentStatus(payrollId);
+    }
+
+    @GetMapping("/api/payroll/my-payroll")
+    //@PreAuthorize("hasAnyRole('EMPLOYEE', 'HR', 'MANAGER')")
+    public List<PayrollRespDto> getMyPayroll(
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        return payrollService.getMyPayroll(
+                userDetails.getUsername());
+    }
+
+
 }

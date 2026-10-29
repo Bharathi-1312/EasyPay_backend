@@ -2,6 +2,8 @@ package com.springboot.EasyPay.controller;
 
 import com.springboot.EasyPay.Dto.request.PayrollComponentDto;
 import com.springboot.EasyPay.Dto.response.PayrollComponentRespDto;
+import com.springboot.EasyPay.enums.ComponentName;
+import com.springboot.EasyPay.enums.ComponentType;
 import com.springboot.EasyPay.service.PayrollComponentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,5 +39,30 @@ public class PayrollComponentController {
     public void deleteComponent(
             @PathVariable Long componentId) {
         componentService.deleteComponent(componentId);
+    }
+
+    // 16. Components by type
+    @GetMapping("/components/type/{type}")
+    //@PreAuthorize("hasRole('HR')")
+    public List<PayrollComponentRespDto> byType(
+            @PathVariable ComponentType type) {
+        return componentService.getComponentsByType(type);
+    }
+
+    // 17. Components by name
+    @GetMapping("/components/name/{name}")
+    //@PreAuthorize("hasRole('HR')")
+    public List<PayrollComponentRespDto> byName(
+            @PathVariable ComponentName name) {
+        return componentService.getComponentsByName(name);
+    }
+
+    // 15. Update component
+    @PatchMapping("/components/{componentId}")
+    //@PreAuthorize("hasRole('HR')")
+    public PayrollComponentRespDto updateComponent(
+            @PathVariable Long componentId,
+            @RequestBody PayrollComponentDto dto) {
+        return componentService.updateComponent(componentId, dto);
     }
 }

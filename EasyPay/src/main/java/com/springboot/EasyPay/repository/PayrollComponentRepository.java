@@ -1,6 +1,8 @@
 package com.springboot.EasyPay.repository;
 
 import com.springboot.EasyPay.Dto.response.PayrollComponentRespDto;
+import com.springboot.EasyPay.enums.ComponentName;
+import com.springboot.EasyPay.enums.ComponentType;
 import com.springboot.EasyPay.model.PayrollComponent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,7 +21,7 @@ public interface PayrollComponentRepository
                 p.id,
                 c.componentName ,
                 c.componentType,
-                c.amount,
+                c.amountPercentage,
                 c.description
             )
             from PayrollComponent c
@@ -31,5 +33,30 @@ public interface PayrollComponentRepository
                 @Param("payrollId") Long payrollId
         );
 
-        List<PayrollComponent> findByPayroll_Id(Long payrollId);
+        @Query("""
+        SELECT pc
+        FROM PayrollComponent pc
+        WHERE pc.componentType = ?1
+        ORDER BY pc.id DESC
+        """)
+        List<PayrollComponent> findByComponentType(
+              ComponentType type);
+
+        @Query("""
+        SELECT pc
+        FROM PayrollComponent pc
+        WHERE pc.componentName = ?1
+        ORDER BY pc.id DESC
+        """)
+        List<PayrollComponent> findByComponentName(
+               ComponentName name);
+
+        @Query("""
+        SELECT pc
+        FROM PayrollComponent pc
+        WHERE pc.payroll.id = ?1
+        ORDER BY pc.id
+        """)
+        List<PayrollComponent> findByPayrollId(
+                 Long payrollId);
 }

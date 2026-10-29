@@ -12,6 +12,6 @@ public record PayrollComponentRespDto(
         Long payrollId,
         ComponentName componentName,
         ComponentType componentType,
-        BigDecimal amount,
+        BigDecimal amountPercentage,
         String description
 ) {}

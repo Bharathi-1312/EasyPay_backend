@@ -37,26 +37,64 @@ public class EmployeeService {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
-    public void addEmployeeByHr(String hrName,EmployeeDto employeeDto) {
+//    public void addEmployeeByHr(String hrName,EmployeeDto employeeDto) {
+//
+//        HR hr =  hrRepository.getByUsername(hrName);
+//
+//        User user = userService.getUserObj(
+//                employeeDto.username(),
+//                employeeDto.password(),
+//                Role.EMPLOYEE
+//        );
+//
+//        // Step 1.5 : Encode the password
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//
+//        Employee employee = EmployeeMapper.mapDtoToEntity(employeeDto);
+//
+//        employee.setUser(user);
+//        employee.setHr(hr);
+//
+//        employeeRepository.save(employee);
+//    }
 
-        HR hr =  hrRepository.getByUsername(hrName);
 
-        User user = userService.getUserObj(
-                employeeDto.username(),
-                employeeDto.password(),
-                Role.EMPLOYEE
-        );
+    public void addEmployeeByHr(String hrName, EmployeeDto employeeDto) {
 
-        // Step 1.5 : Encode the password
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        HR hr = hrRepository.getByUsername(hrName);
 
+        // Step 1: Check if the user already exists in the database
+        // (Replace userService.findByUsername with your actual method name)
+        Optional<User> existingUser = userRepository.findUserByUsername(employeeDto.username());
+
+        User user;
+
+        if (existingUser.isPresent()) {
+            // Step 2: If the user exists, use that existing record
+            user = existingUser.get();
+
+            // Optional: Update the password if provided/changed, or verify it matches
+            // user.setPassword(passwordEncoder.encode(employeeDto.password()));
+        } else {
+            // Step 3: If the user does not exist, create a new one with EMPLOYEE role
+            user = userService.getUserObj(
+                    employeeDto.username(),
+                    employeeDto.password(),
+                    Role.EMPLOYEE
+            );
+            // Encode the password only for the new user
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+
+        // Step 4: Map and link entities
         Employee employee = EmployeeMapper.mapDtoToEntity(employeeDto);
-
         employee.setUser(user);
         employee.setHr(hr);
 
+        // Step 5: Save the employee profile
         employeeRepository.save(employee);
     }
+
 
     public Employee getById(long id) {
         Optional<Employee> optional= employeeRepository.findById(id);

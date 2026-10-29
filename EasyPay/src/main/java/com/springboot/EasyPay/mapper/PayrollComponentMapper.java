@@ -21,7 +21,7 @@ public class PayrollComponentMapper {
                 dto.componentType()
         );
 
-        component.setAmount(dto.amount());
+        component.setAmountPercentage(dto.amountPercentage());
         component.setDescription(dto.description());
 
         return component;
@@ -35,7 +35,7 @@ public class PayrollComponentMapper {
                 component.getPayroll().getId(),
                 component.getComponentName(),
                 component.getComponentType(),
-                component.getAmount(),
+                component.getAmountPercentage(),
                 component.getDescription()
         );
     }

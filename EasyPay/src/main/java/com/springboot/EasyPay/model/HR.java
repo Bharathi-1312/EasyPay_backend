@@ -31,6 +31,7 @@ public class HR {
 
 
     @OneToOne
-    private User user;
+   private User user;
+
 
 }

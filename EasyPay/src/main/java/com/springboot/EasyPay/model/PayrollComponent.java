@@ -29,11 +29,12 @@ public class PayrollComponent {
     private ComponentType componentType;
 
     @Column(nullable = false)
-    private BigDecimal amount;
+    private BigDecimal amountPercentage;
 
     @Column(nullable = false)
     private String description;
 
     @ManyToOne(optional = false)
     private Payroll payroll;
+
 }

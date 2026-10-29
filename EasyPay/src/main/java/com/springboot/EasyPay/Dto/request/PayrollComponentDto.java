@@ -11,6 +11,6 @@ import java.math.BigDecimal;
 public record PayrollComponentDto(
                                   ComponentName componentName,
                                   ComponentType componentType,
-                                  BigDecimal amount,
+                                  BigDecimal amountPercentage,
                                   String description){
 }

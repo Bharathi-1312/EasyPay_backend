@@ -7,9 +7,11 @@ import com.springboot.EasyPay.exception.InvalidCallException;
 import com.springboot.EasyPay.exception.ResourceNotFoundException;
 import com.springboot.EasyPay.mapper.HRMapper;
 import com.springboot.EasyPay.mapper.ManagerMapper;
+import com.springboot.EasyPay.model.Employee;
 import com.springboot.EasyPay.model.HR;
 import com.springboot.EasyPay.model.Manager;
 import com.springboot.EasyPay.model.User;
+import com.springboot.EasyPay.repository.EmployeeRepository;
 import com.springboot.EasyPay.repository.HRRepository;
 import com.springboot.EasyPay.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -27,6 +29,7 @@ public class HRService {
     private final HRRepository hrRepository;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final EmployeeRepository employeeRepository;
 
     public void insertHR( HRDto hrDto) {
 
@@ -42,7 +45,6 @@ public class HRService {
         // Step 3: Attach User to Manager
         hr.setUser(user);
 
-        // Step 4: save manager
         hrRepository.save(hr);
     }
 

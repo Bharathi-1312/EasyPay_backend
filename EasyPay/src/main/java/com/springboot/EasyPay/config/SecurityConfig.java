@@ -110,10 +110,7 @@ public class SecurityConfig {
 //                        .requestMatchers(HttpMethod.GET,"/api/payroll/payslip/{payrollId}").hasAuthority("EMPLOYEE")
 
                         //Getting  Payslip with empId by employee
-                        .requestMatchers(HttpMethod.GET,"/api/payroll/employee/{employeeId}").hasAuthority("EMPLOYEE")
-
-                        //Getting  payslip with emplId by HR
-                        .requestMatchers(HttpMethod.GET,"/api/payroll/employee/{employeeId}").hasAuthority("HR")
+                        .requestMatchers(HttpMethod.GET,"/api/payroll/employee/{employeeId}").hasAnyAuthority("EMPLOYEE","HR")
 
                         //Adding PayrollComponents
                         .requestMatchers(HttpMethod.POST,"/api/payroll-components/{payrollId}").hasAuthority("HR")
@@ -128,7 +125,31 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE,"/api/payroll-components/{componentId}").hasAuthority("HR")
 
 
-                        .anyRequest().permitAll()
+
+                                //Getting  PayrollStatus by HR
+                                .requestMatchers(HttpMethod.GET,"/api/apyroll/status/{status}").hasAuthority("HR")
+
+                                //Getting  Payroll By date rang ( by HR)
+                                .requestMatchers(HttpMethod.GET,"/api/payroll/period").hasAuthority("HR")
+                                 //Search by employee and date range
+                                .requestMatchers(HttpMethod.GET,"/api/payroll/search").hasAuthority("HR")
+                                //Earning history
+                                .requestMatchers(HttpMethod.GET,"/api/employee/earnings/{id}").hasAuthority("EMPLOYEE")
+                                //Deduction history
+                                .requestMatchers(HttpMethod.GET,"/api/employee/deductions/{id}").hasAuthority("EMPLOYEE")
+                                //Monthly Report By HR
+                                .requestMatchers(HttpMethod.GET,"/api/payroll/reports/monthly").hasAuthority("HR")
+                                //Payslip with payrollId By Employee
+                                .requestMatchers(HttpMethod.GET,"/api/payroll/payslip-text/{payrollId}").hasAuthority("EMPLOYEE")
+                                //payroll Status by HR
+                                .requestMatchers(HttpMethod.GET,"/api/payroll/payment-status/{payrollId}").hasAuthority("HR")
+                                //My Payroll
+                                .requestMatchers(HttpMethod.GET,"/api/payroll/my-payroll").hasAnyAuthority("HR","EMPLOYEE","MANAGER")
+
+
+
+
+                                .anyRequest().permitAll()
                 );
         // Add jwt filter before Spring's Auth Filter
         http.addFilterBefore(jwtFilter , UsernamePasswordAuthenticationFilter.class);
